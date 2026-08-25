@@ -128,20 +128,7 @@ class TejaswiniGPT:
         self.root = root
 
         self.root.title(APP_NAME)
-        self.root.geometry("900x760")
-        self.root.minsize(780, 620)
-        self.root.configure(bg="#eef3ff")
-
-        style = ttk.Style(self.root)
-        style.theme_use("clam")
-        style.configure("App.TFrame", background="#eef3ff")
-        style.configure("Card.TFrame", background="#ffffff")
-        style.configure("Primary.TButton", background="#5b6cff", foreground="#ffffff", padding=(18, 10), font=("Helvetica", 10, "bold"))
-        style.map("Primary.TButton", background=[("active", "#485cf0")], foreground=[("active", "#ffffff")])
-        style.configure("Secondary.TButton", background="#edf2ff", foreground="#1f2937", padding=(14, 9), font=("Helvetica", 10, "bold"))
-        style.map("Secondary.TButton", background=[("active", "#dfe7ff")], foreground=[("active", "#1f2937")])
-        style.configure("Toggle.TCheckbutton", background="#eef3ff", foreground="#1f2937", font=("Helvetica", 10, "bold"))
-        style.configure("Input.TEntry", fieldbackground="#f8fafc", foreground="#0f172a")
+        self.root.geometry("850x720")
 
         # ----------------------------------------------------
         # MEMORY
@@ -161,11 +148,9 @@ class TejaswiniGPT:
         # UI
         # ----------------------------------------------------
 
-        main = tk.Frame(
+        main = ttk.Frame(
             root,
-            bg="#eef3ff",
-            padx=18,
-            pady=18
+            padding=18
         )
 
         main.pack(
@@ -173,101 +158,76 @@ class TejaswiniGPT:
             expand=True
         )
 
-        header = tk.Frame(
+        title = ttk.Label(
             main,
-            bg="#ffffff",
-            highlightthickness=0,
-            padx=18,
-            pady=16
-        )
-
-        header.pack(
-            fill="x",
-            pady=(0, 12)
-        )
-
-        title = tk.Label(
-            header,
             text=APP_NAME,
-            font=("Helvetica", 27, "bold"),
-            bg="#ffffff",
-            fg="#111827",
-            anchor="w"
+            font=("Helvetica", 24, "bold")
         )
 
         title.pack(anchor="w")
 
-        subtitle = tk.Label(
-            header,
+        subtitle = ttk.Label(
+            main,
             text=(
                 "Local AI Agent • Ollama • Memory • "
                 "Knowledge • Tools • Web Research"
-            ),
-            font=("Helvetica", 10),
-            bg="#ffffff",
-            fg="#475569",
-            anchor="w"
+            )
         )
 
-        subtitle.pack(anchor="w", pady=(6, 0))
-
-        self.status = tk.Label(
-            header,
-            text="● Agent Ready",
-            bg="#e9f9ef",
-            fg="#166534",
-            font=("Helvetica", 10, "bold"),
-            padx=10,
-            pady=6,
-            anchor="w"
+        subtitle.pack(
+            anchor="w",
+            pady=(2, 10)
         )
 
-        self.status.pack(anchor="w", pady=(12, 0))
+        self.status = ttk.Label(
+            main,
+            text="● Agent Ready"
+        )
 
-        pipeline = tk.Label(
+        self.status.pack(
+            anchor="w",
+            pady=(0, 10)
+        )
+
+        # ----------------------------------------------------
+        # PIPELINE
+        # ----------------------------------------------------
+
+        pipeline = ttk.Label(
             main,
             text=(
                 "🎯 Goal → 🧠 Ollama → ⚖️ Decision → "
                 "⚡ Action → 💬 Output"
-            ),
-            bg="#eef3ff",
-            fg="#334155",
-            font=("Helvetica", 10, "bold")
+            )
         )
 
-        pipeline.pack(anchor="w", pady=(0, 10))
-
-        chat_container = tk.Frame(
-            main,
-            bg="#ffffff",
-            padx=12,
-            pady=12
+        pipeline.pack(
+            anchor="w",
+            pady=(0, 10)
         )
 
-        chat_container.pack(
+        # ----------------------------------------------------
+        # CHAT
+        # ----------------------------------------------------
+
+        chat_frame = ttk.Frame(main)
+
+        chat_frame.pack(
             fill="both",
             expand=True
         )
 
         self.chat_box = tk.Text(
-            chat_container,
+            chat_frame,
             wrap="word",
             state="disabled",
-            font=("Helvetica", 11),
-            bg="#f8fafc",
-            fg="#111827",
-            padx=14,
-            pady=14,
-            relief="flat",
-            borderwidth=1,
-            highlightthickness=1,
-            highlightbackground="#dfe7ff",
-            highlightcolor="#5b6cff",
-            insertbackground="#111827"
+            font=("Helvetica", 12),
+            padx=12,
+            pady=12
         )
 
         scrollbar = ttk.Scrollbar(
-            chat_container,
+            chat_frame,
             orient="vertical",
             command=self.chat_box.yview
         )
@@ -287,115 +247,77 @@ class TejaswiniGPT:
             fill="y"
         )
 
-        self.chat_box.tag_configure(
-            "user",
-            foreground="#0f172a",
-            font=("Helvetica", 11, "bold"),
-            lmargin1=6,
-            lmargin2=6,
-            spacing1=4,
-            spacing3=4
-        )
+        # ----------------------------------------------------
+        # WEB SEARCH
+        # ----------------------------------------------------
 
-        self.chat_box.tag_configure(
-            "assistant",
-            foreground="#1f2937",
-            font=("Helvetica", 11),
-            lmargin1=6,
-            lmargin2=6,
-            spacing1=4,
-            spacing3=4
-        )
-
-        options = tk.Frame(
-            main,
-            bg="#eef3ff",
-            pady=10
-        )
+        options = ttk.Frame(main)
 
         options.pack(
-            fill="x"
+            fill="x",
+            pady=(10, 5)
         )
 
         self.live_web = tk.BooleanVar(
             value=False
         )
 
-        tk.Checkbutton(
+        ttk.Checkbutton(
             options,
-            text="Live Web Research",
-            variable=self.live_web,
-            bg="#eef3ff",
-            fg="#1f2937",
-            selectcolor="#e0e7ff",
-            font=("Helvetica", 10, "bold")
+            text="🌐 Live Web Research",
+            variable=self.live_web
         ).pack(
             side="left"
         )
 
-        tk.Label(
+        ttk.Label(
             options,
-            text="Search current information",
-            bg="#eef3ff",
-            fg="#64748b",
-            font=("Helvetica", 10)
+            text="Search current information"
         ).pack(
             side="left",
-            padx=(10, 0)
+            padx=10
         )
 
-        input_frame = tk.Frame(
-            main,
-            bg="#eef3ff",
-            pady=(8, 0)
-        )
+        # ----------------------------------------------------
+        # INPUT
+        # ----------------------------------------------------
+
+        input_frame = ttk.Frame(main)
 
         input_frame.pack(
-            fill="x"
+            fill="x",
+            pady=(5, 0)
         )
 
-        self.input_box = tk.Entry(
+        ask_button = ttk.Button(
             input_frame,
-            font=("Helvetica", 12),
-            bg="#f8fafc",
-            fg="#111827",
-            insertbackground="#111827",
-            relief="flat",
-            highlightthickness=1,
-            highlightbackground="#dfe7ff",
-            highlightcolor="#5b6cff",
-            bd=0,
-            padx=14,
-            pady=12
+            text="Ask me anything",
+            command=self.focus_input
+        )
+
+        ask_button.pack(
+            side="left",
+            padx=(0, 8)
+        )
+
+        self.input_box = ttk.Entry(
+            input_frame,
+            font=("Helvetica", 12)
         )
 
         self.input_box.pack(
             side="left",
             fill="x",
-            expand=True,
-            ipady=4
+            expand=True
         )
 
         search_button = ttk.Button(
             input_frame,
             text="Search",
-            command=self.search_request,
-            style="Secondary.TButton"
+            command=self.search_request
         )
 
         search_button.pack(
-            side="left",
-            padx=(8, 0)
-        )
-
-        submit = ttk.Button(
-            input_frame,
-            text="Send",
-            command=self.process_request,
-            style="Primary.TButton"
-        )
-
-        submit.pack(
             side="left",
             padx=(8, 0)
         )
@@ -405,13 +327,29 @@ class TejaswiniGPT:
             self.process_request
         )
 
+        submit = ttk.Button(
+            input_frame,
+            text="Submit",
+            command=self.process_request
+        )
+
+        submit.pack(
+            side="left",
+            padx=(8, 0)
+        )
+
         self.input_box.focus()
+
+        # ----------------------------------------------------
+        # WELCOME
+        # ----------------------------------------------------
 
         self.add_message(
             APP_NAME,
             (
                 "Hello! 👋\n\n"
-                "I am your local AI Agent powered by Ollama."
+                
+                "I am your local AI Agent powered by Ollama.\n\n"
             )
         )
 
@@ -1444,18 +1382,14 @@ important source names in your answer.
             state="normal"
         )
 
-        tag = "assistant" if sender != "You" else "user"
-
         self.chat_box.insert(
             "end",
-            f"{sender}:\n",
-            tag
+            f"{sender}:\n"
         )
 
         self.chat_box.insert(
             "end",
-            f"{message}\n\n",
-            tag
+            f"{message}\n\n"
         )
 
         self.chat_box.configure(

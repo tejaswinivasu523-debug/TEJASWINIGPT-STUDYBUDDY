@@ -140,6 +140,54 @@ class TejaswiniGPT:
             600
         )
 
+        self.ui_colors = {
+            "background": "#F4F7FF",
+            "surface": "#FFFFFF",
+            "surface_subtle": "#F8FAFC",
+            "primary": "#5B6CFF",
+            "primary_soft": "#E8EBFF",
+            "text": "#1F2937",
+            "muted": "#64748B",
+            "border": "#DDE6F4",
+            "link": "#2563EB",
+        }
+
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Primary.TButton",
+            background=self.ui_colors["primary"],
+            foreground="#FFFFFF",
+            padding=(14, 9),
+            font=("Helvetica", 10, "bold")
+        )
+        style.map(
+            "Primary.TButton",
+            background=[("active", "#485CF0")],
+            foreground=[("active", "#FFFFFF")]
+        )
+        style.configure(
+            "Tertiary.TButton",
+            background="#EEF2FF",
+            foreground="#334155",
+            padding=(12, 8),
+            font=("Helvetica", 10, "bold")
+        )
+        style.map(
+            "Tertiary.TButton",
+            background=[("active", "#E0E7FF")],
+            foreground=[("active", "#1F2937")]
+        )
+        style.configure(
+            "App.Vertical.TScrollbar",
+            background=self.ui_colors["border"],
+            troughcolor=self.ui_colors["surface_subtle"],
+            arrowcolor=self.ui_colors["text"],
+            bordercolor=self.ui_colors["border"],
+            lightcolor=self.ui_colors["border"],
+            darkcolor=self.ui_colors["border"],
+        )
+
         # ====================================================
         # MEMORY
         # ====================================================
@@ -273,6 +321,28 @@ class TejaswiniGPT:
             ),
             padx=12,
             pady=12
+        )
+
+        self.chat_box.tag_configure(
+            "user",
+            foreground="#1D4ED8",
+            font=("Helvetica", 12, "bold")
+        )
+
+        self.chat_box.tag_configure(
+            "assistant",
+            foreground="#14532D",
+            font=("Helvetica", 12, "bold")
+        )
+
+        self.chat_box.tag_configure(
+            "message_user",
+            foreground="#1E3A8A"
+        )
+
+        self.chat_box.tag_configure(
+            "message_assistant",
+            foreground="#0F172A"
         )
 
         scrollbar = ttk.Scrollbar(
@@ -2630,14 +2700,20 @@ must exactly match one option. Return JSON only.
             state="normal"
         )
 
+        is_user = sender == "You"
+        label_tag = "user" if is_user else "assistant"
+        text_tag = "message_user" if is_user else "message_assistant"
+
         self.chat_box.insert(
             "end",
-            f"{sender}:\n"
+            f"{sender}:\n",
+            label_tag
         )
 
         self.chat_box.insert(
             "end",
-            f"{message}\n\n"
+            f"{message}\n\n",
+            text_tag
         )
 
         self.chat_box.configure(
